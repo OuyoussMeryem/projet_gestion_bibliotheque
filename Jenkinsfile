@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/Rafiki-Ibtissam/GestionBibliotheque.git'
+                git 'https://github.com/OuyoussMeryem/projet_gestion_bibliotheque.git'
             }
         }
         stage('Build') {
