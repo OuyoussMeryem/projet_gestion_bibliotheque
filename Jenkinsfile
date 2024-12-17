@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/OuyoussMeryem/projet_gestion_bibliotheque.git'
+                git branch: 'main', url: 'https://github.com/OuyoussMeryem/projet_gestion_bibliotheque.git'
             }
         }
         stage('Build') {
@@ -28,7 +28,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                echo 'Déploiement simulé réussi'
+                echo 'Simulated deployment successful'
             }
         }
     }
