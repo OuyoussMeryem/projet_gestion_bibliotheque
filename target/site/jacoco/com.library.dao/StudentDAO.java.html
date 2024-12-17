@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StudentDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">mon-projet</a> &gt; <a href="index.source.html" class="el_package">com.library.dao</a> &gt; <span class="el_source">StudentDAO.java</span></div><h1>StudentDAO.java</h1><pre class="source lang-java linenums">package com.library.dao;
+
+import com.library.model.Student;
+import com.library.util.DbConnection;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+<span class="fc" id="L10">public class StudentDAO {</span>
+
+    // Ajouter un étudiant
+    public void addStudent(Student student) {
+<span class="nc" id="L14">        String query = &quot;INSERT INTO students (id,name) VALUES (?,?)&quot;;</span>
+<span class="nc" id="L15">        try (Connection connection = DbConnection.getConnection();</span>
+<span class="nc" id="L16">             PreparedStatement statement = connection.prepareStatement(query)) {</span>
+<span class="nc" id="L17">            statement.setInt(1, student.getId());</span>
+<span class="nc" id="L18">            statement.setString(2, student.getName());</span>
+<span class="nc" id="L19">            statement.executeUpdate();</span>
+<span class="nc" id="L20">        } catch (SQLException e) {</span>
+<span class="nc" id="L21">            e.printStackTrace();</span>
+<span class="nc" id="L22">        }</span>
+<span class="nc" id="L23">    }</span>
+
+
+    // Récupérer un étudiant par ID
+    public Student getStudentById(int id) {
+<span class="nc" id="L28">        String query = &quot;SELECT * FROM students WHERE id = ?&quot;;</span>
+<span class="nc" id="L29">        try (Connection connection = DbConnection.getConnection();</span>
+<span class="nc" id="L30">             PreparedStatement statement = connection.prepareStatement(query)) {</span>
+<span class="nc" id="L31">            statement.setInt(1, id);</span>
+<span class="nc" id="L32">            try (ResultSet resultSet = statement.executeQuery()) {</span>
+<span class="nc bnc" id="L33" title="All 2 branches missed.">                if (resultSet.next()) {</span>
+<span class="nc" id="L34">                    return new Student(resultSet.getInt(&quot;id&quot;),resultSet.getString(&quot;name&quot;));</span>
+                }
+<span class="nc bnc" id="L36" title="All 2 branches missed.">            }</span>
+<span class="nc bnc" id="L37" title="All 4 branches missed.">        } catch (SQLException e) {</span>
+<span class="nc" id="L38">            e.printStackTrace();</span>
+<span class="nc" id="L39">        }</span>
+<span class="nc" id="L40">        return null;</span>
+    }
+
+    // Récupérer tous les étudiants
+    public List&lt;Student&gt; getAllStudents() {
+<span class="nc" id="L45">        List&lt;Student&gt; students = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L46">        String query = &quot;SELECT id, name FROM students&quot;;  // Selecting both 'id' and 'name'</span>
+
+<span class="nc" id="L48">        try (Connection connection = DbConnection.getConnection();</span>
+<span class="nc" id="L49">             Statement statement = connection.createStatement();</span>
+<span class="nc" id="L50">             ResultSet resultSet = statement.executeQuery(query)) {</span>
+
+<span class="nc bnc" id="L52" title="All 2 branches missed.">            while (resultSet.next()) {</span>
+                // Fetch 'id' and 'name' from the result set
+<span class="nc" id="L54">                int id = resultSet.getInt(&quot;id&quot;);</span>
+<span class="nc" id="L55">                String name = resultSet.getString(&quot;name&quot;);</span>
+
+                // Create the student using the id and name
+<span class="nc" id="L58">                students.add(new Student(id,name));  // Passing both id and name to the constructor</span>
+<span class="nc" id="L59">            }</span>
+<span class="nc" id="L60">        } catch (SQLException e) {</span>
+<span class="nc" id="L61">            e.printStackTrace();</span>
+<span class="nc" id="L62">        }</span>
+<span class="nc" id="L63">        return students;</span>
+    }
+
+
+
+
+
+
+    // Mettre à jour un étudiant
+    public void updateStudent(Student student) {
+<span class="nc" id="L73">        String query = &quot;UPDATE students SET name = ? WHERE id = ?&quot;;</span>
+<span class="nc" id="L74">        try (Connection connection = DbConnection.getConnection();</span>
+<span class="nc" id="L75">             PreparedStatement statement = connection.prepareStatement(query)) {</span>
+<span class="nc" id="L76">            statement.setString(1, student.getName());</span>
+<span class="nc" id="L77">            statement.setInt(2, student.getId());</span>
+<span class="nc" id="L78">            statement.executeUpdate();</span>
+<span class="nc" id="L79">        } catch (SQLException e) {</span>
+<span class="nc" id="L80">            e.printStackTrace();</span>
+<span class="nc" id="L81">        }</span>
+<span class="nc" id="L82">    }</span>
+
+    // Supprimer un étudiant
+    public void deleteStudent(int id) {
+<span class="nc" id="L86">        String query = &quot;DELETE FROM students WHERE id = ?&quot;;</span>
+<span class="nc" id="L87">        try (Connection connection = DbConnection.getConnection();</span>
+<span class="nc" id="L88">             PreparedStatement statement = connection.prepareStatement(query)) {</span>
+<span class="nc" id="L89">            statement.setInt(1, id);</span>
+<span class="nc" id="L90">            statement.executeUpdate();</span>
+<span class="nc" id="L91">        } catch (SQLException e) {</span>
+<span class="nc" id="L92">            e.printStackTrace();</span>
+<span class="nc" id="L93">        }</span>
+<span class="nc" id="L94">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
