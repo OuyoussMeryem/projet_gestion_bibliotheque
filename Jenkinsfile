@@ -21,7 +21,7 @@ pipeline {
         }
         stage('Quality Analysis') {
             steps {
-                withSonarQubeEnv('SonarQube') {
+                withSonarQubeEnv('sonarqube_server') {
                     bat "\"${MAVEN_HOME}\\bin\\mvn\" sonar:sonar"
                 }
             }
